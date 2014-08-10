@@ -14,6 +14,8 @@
     var floor;
     var yarns;
     var num_yarns = 3;
+    var green_yarns;
+    var num_green_yarns = 1;
     var doges;
     var num_doges = 3;
     var bigDoges;
@@ -22,7 +24,7 @@
     var timer;
     var output;
 
-    var startingLives = 3;
+    var startingLives = 9;
 
     var Cat = function() {
       var cat = this;
@@ -150,6 +152,40 @@
       }
     }
 
+    function GreenYarn() {
+      tGreenYarn = new Sprite(scene, "yarn2.png", 80, 80);
+
+      tGreenYarn.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tGreenYarn.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tGreenYarn.reset();
+
+      return tGreenYarn;
+    }
+
+    function makeGreenYarns() {
+      green_yarns = new Array(num_green_yarns);
+      for (i = 0; i < num_green_yarns; i++) {
+        green_yarns[i] = new GreenYarn();
+      }
+    }
+
+    function updateGreenYarns() {
+      for (i = 0; i < num_green_yarns; i++) {
+        green_yarns[i].update();
+      }
+    }
+
     function Floor() {
       tFloor = new Sprite(scene, "floor.jpg", 2200, 700);
       tFloor.setDX(-10);
@@ -176,6 +212,7 @@
       timer = new Timer();
       timer.reset();
       makeYarns();
+      makeGreenYarns();
       makeDoges();
       makeBigDoges();
       floor = new Floor();
@@ -202,6 +239,7 @@
       score.innerHTML = "SCORE: " + points;
       floor.update();
       updateYarns();
+      updateGreenYarns();
       updateDoges();
       updateBigDoges();
     }
