@@ -11,18 +11,6 @@
     <script type="text/javascript">
     var cats = {};
 
-    Leap.loop(function(frame) {
-
-      frame.hands.forEach(function(hand, index) {
-        
-        var cat = ( cats[index] || (cats[index] = new Cat()) );    
-        cat.setTransform(hand.screenPosition(), hand.roll());
-        
-      });
-      
-    }).use('screenPosition', {scale: 0.25});
-
-
     var Cat = function() {
       var cat = this;
       var img = document.createElement('img');
@@ -47,12 +35,33 @@
 
     };
 
-    cats[0] = new Cat();
+    function init() {
+      var scene = new Scene();
+      scene.start();
+      Leap.loop(function(frame) {
+
+        frame.hands.forEach(function(hand, index) {
+          
+          var cat = ( cats[index] || (cats[index] = new Cat()) );    
+          cat.setTransform(hand.screenPosition(), hand.roll());
+          
+        });
+        
+      }).use('screenPosition', {scale: 0.25});
+      cats[0] = new Cat();
+      Leap.loopController.setBackground(true);
+    }
+
+    function update() {
+      scene.clear();
+    }
+
+    //cats[0] = new Cat();
 
     // This allows us to move the cat even whilst in an iFrame.
-    Leap.loopController.setBackground(true);
+    //Leap.loopController.setBackground(true);
     </script>
   </head>
-  <body>
+  <body onload = "init()">
   </body>
 </html>
