@@ -12,6 +12,8 @@
     var cats = {};
     var scene;
     var floor;
+    var yarns;
+    var num_yarns = Math.ceil(Math.random() * 10);
 
     var Cat = function() {
       var cat = this;
@@ -37,6 +39,40 @@
 
     };
 
+    function Yarn() {
+      tYarn = new Sprite(scene, "yarn.png", 50, 50);
+
+      tYarn.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tYarn.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tYarn.reset();
+
+      return tYarn;
+    }
+
+    function makeYarns() {
+      yarns = new Array(num_yarns);
+      for (i = 0; i < num_yarns; i++) {
+        yarns[i] = new Yarn();
+      }
+    }
+
+    function updateYarns() {
+      for (i = 0; i < num_yarns; i++) {
+        yarns[i].update();
+      }
+    }
+
     function Floor() {
       tFloor = new Sprite(scene, "floor.jpg", 2200, 700);
       tFloor.setDX(-10);
@@ -56,6 +92,7 @@
     function init() {
       scene = new Scene();
       scene.setSize(1100, 700);
+      makeYarns();
       floor = new Floor();
       scene.start();
       Leap.loop(function(frame) {
@@ -75,6 +112,7 @@
     function update() {
       scene.clear();
       floor.update();
+      updateYarns();
     }
 
     //cats[0] = new Cat();
