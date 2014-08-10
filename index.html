@@ -257,7 +257,19 @@
       scene.clear();
       currentTime = timer.getElapsedTime();
       //output.innerHTML = "TIME: " + currentTime;
-      points = Math.floor(currentTime);
+      if (currentTime % 90 === 0) {
+        startingLives -= 1;
+        lives.innerHTML = "LIVES: " + startingLives;
+      }
+      else if (currentTime % 60 === 0) {
+        points = Math.floor(currentTime) + 50;
+      }
+      else if (currentTime % 30 === 0) {
+        points = Math.floor(currentTime) + 10;
+      }
+      else {
+        points = Math.floor(currentTime);
+      }
       score.innerHTML = "SCORE: " + points;
       floor.update();
       updateYarns();
