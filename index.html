@@ -13,7 +13,9 @@
     var scene;
     var floor;
     var yarns;
-    var num_yarns = Math.ceil(Math.random() * 10);
+    var num_yarns = 3;
+    var doges;
+    var num_doges = 3;
 
     var Cat = function() {
       var cat = this;
@@ -38,6 +40,40 @@
       };
 
     };
+
+    function Doge() {
+      tDoge = new Sprite(scene, "doge.png", 80, 80);
+
+      tDoge.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tDoge.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tDoge.reset();
+
+      return tDoge;
+    }
+
+    function makeDoges() {
+      doges = new Array(num_doges);
+      for (i = 0; i < num_doges; i++) {
+        doges[i] = new Doge();
+      }
+    }
+
+    function updateDoges() {
+      for (i = 0; i < num_doges; i++) {
+        doges[i].update();
+      }
+    }
 
     function Yarn() {
       tYarn = new Sprite(scene, "yarn.png", 50, 50);
@@ -93,6 +129,7 @@
       scene = new Scene();
       scene.setSize(1100, 700);
       makeYarns();
+      makeDoges();
       floor = new Floor();
       scene.start();
       Leap.loop(function(frame) {
@@ -113,6 +150,7 @@
       scene.clear();
       floor.update();
       updateYarns();
+      updateDoges();
     }
 
     // This allows us to move the cat even whilst in an iFrame.
