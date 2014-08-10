@@ -19,6 +19,11 @@
     var bigDoges;
     var num_big_doges = 2;
 
+    var timer;
+    var output;
+
+    var startingLives = 3;
+
     var Cat = function() {
       var cat = this;
       var img = document.createElement('img');
@@ -164,6 +169,12 @@
     function init() {
       scene = new Scene();
       scene.setSize(1100, 700);
+      //output = document.getElementById("output");
+      score = document.getElementById("score");
+      lives = document.getElementById("lives");
+      lives.innerHTML = "LIVES: " + startingLives;
+      timer = new Timer();
+      timer.reset();
       makeYarns();
       makeDoges();
       makeBigDoges();
@@ -185,6 +196,10 @@
 
     function update() {
       scene.clear();
+      currentTime = timer.getElapsedTime();
+      //output.innerHTML = "TIME: " + currentTime;
+      points = Math.floor(currentTime);
+      score.innerHTML = "SCORE: " + points;
       floor.update();
       updateYarns();
       updateDoges();
@@ -196,5 +211,7 @@
     </script>
   </head>
   <body onload = "init()">
+    <div id="score"></div>
+    <div id="lives"></div>
   </body>
 </html>
