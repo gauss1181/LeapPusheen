@@ -21,6 +21,8 @@
     var bigDoges;
     var num_big_doges = 2;
 
+    var pusheen;
+
     var timer;
     var output;
 
@@ -202,6 +204,25 @@
       return tFloor;
     }
 
+    function checkCollisions() {
+      for (i = 0; i < num_yarns; i++) {
+        if (pusheen.collidesWith(yarns[i])) {
+          yarns[i].reset();
+          console.log('hi');
+        }
+      }
+      for (j = 0; j < num_green_yarns; j++) {
+        if (pusheen.collidesWith(green_yarns[j])) {
+          green_yarns[j].reset();
+        }
+      }
+      for (k = 0; k < num_doges; k++) {
+        if (pusheen.collidesWith(doges[k])) {
+          doges[k].reset();
+        }
+      }
+    }
+
     function init() {
       scene = new Scene();
       scene.setSize(1100, 700);
@@ -228,6 +249,7 @@
         
       }).use('screenPosition', {scale: 0.25});
       cats[0] = new Cat();
+      pusheen = cats[0];
       Leap.loopController.setBackground(true);
     }
 
@@ -242,6 +264,7 @@
       updateGreenYarns();
       updateDoges();
       updateBigDoges();
+      checkCollisions();
     }
 
     // This allows us to move the cat even whilst in an iFrame.
