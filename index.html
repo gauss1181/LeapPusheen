@@ -11,6 +11,7 @@
     <script type="text/javascript">
     var cats = {};
     var scene;
+    var floor;
 
     var Cat = function() {
       var cat = this;
@@ -27,7 +28,7 @@
         img.style.left = position[0] - img.width  / 2 + 'px';
         img.style.top  = position[1] - img.height / 2 + 'px';
 
-      img.style.transform = 'rotate(' + -rotation + 'rad)';
+        img.style.transform = 'rotate(' + -rotation + 'rad)';
       
         img.style.webkitTransform = img.style.MozTransform = img.style.msTransform =
         img.style.OTransform = img.style.transform;
@@ -36,9 +37,26 @@
 
     };
 
+    function Floor() {
+      tFloor = new Sprite(scene, "floor.jpg", 2200, 700);
+      tFloor.setDX(-10);
+      tFloor.setDY(0);
+      tFloor.setPosition(1100, 350);
+
+      tFloor.checkBounds = function() {
+        // repeat floor background for side scroller
+        if (this.x < 0) {
+          this.setPosition(1100, 350);
+        }
+      };
+
+      return tFloor;
+    }
+
     function init() {
       scene = new Scene();
       scene.setSize(1100, 700);
+      floor = new Floor();
       scene.start();
       Leap.loop(function(frame) {
 
@@ -56,6 +74,7 @@
 
     function update() {
       scene.clear();
+      floor.update();
     }
 
     //cats[0] = new Cat();
