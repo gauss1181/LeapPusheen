@@ -260,7 +260,11 @@
       currentTime = timer.getElapsedTime();
       //output.innerHTML = "TIME: " + currentTime;
       points = Math.floor(currentTime) + bonus;
-      if (Math.floor(currentTime) !== 0 && Math.floor(currentTime) % 30 === 0) {
+      if (Math.floor(currentTime) !== 0 && Math.floor(currentTime) % 50 === 0) {
+        scene.stop();
+        alert("Game oer! Your score is " + String(points));
+      }
+      else if (Math.floor(currentTime) !== 0 && Math.floor(currentTime) % 30 === 0) {
         startingLives -= 1;
         if (startingLives === 0) {
           scene.stop();
