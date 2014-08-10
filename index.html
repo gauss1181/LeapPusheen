@@ -10,6 +10,7 @@
     <script type="text/javascript" src="simpleGame.js"></script>
     <script type="text/javascript">
     var cats = {};
+    var scene;
 
     var Cat = function() {
       var cat = this;
@@ -36,7 +37,7 @@
     };
 
     function init() {
-      var scene = new Scene();
+      scene = new Scene();
       scene.start();
       Leap.loop(function(frame) {
 
