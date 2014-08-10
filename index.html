@@ -89,14 +89,6 @@
       return tFloor;
     }
 
-    function checkCollisions() {
-      for (i = 0; i < num_yarns; i++) {
-        if (cat.collidesWith(yarns[i])) {
-          yarns[i].reset();
-        }
-      }
-    }
-
     function init() {
       scene = new Scene();
       scene.setSize(1100, 700);
@@ -119,7 +111,6 @@
 
     function update() {
       scene.clear();
-      //checkCollisions();
       floor.update();
       updateYarns();
     }
