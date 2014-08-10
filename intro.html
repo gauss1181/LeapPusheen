@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Leap Pusheen</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="http://js.leapmotion.com/leap-0.6.2.js"></script>
+    <script src="http://js.leapmotion.com/leap-0.6.2.min.js"></script>
+    <script src="http://js.leapmotion.com/leap-plugins-0.1.6.js"></script>
+    <script src="http://js.leapmotion.com/leap-plugins-0.1.6.min.js"></script>
+    <script type="text/javascript" src="simpleGame.js"></script>
+    <script type="text/javascript">
+    var cats = {};
+    var scene;
+    var floor;
+    var yarns; // purple yarns: 10 points
+    var num_yarns = 3;
+    var green_yarns; // green yarns: 50 points
+    var num_green_yarns = 1;
+    var doges; // touch a doge == lose a life. run out of lives == game over.
+    var num_doges = 3;
+    var bigDoges;
+    var num_big_doges = 2;
+
+    var pusheen;
+
+    var timer;
+    var output;
+
+    var startingLives = 9;
+
+    var Cat = function() {
+      var cat = this;
+      var img = document.createElement('img');
+      img.src = 'http://fc00.deviantart.net/fs71/f/2013/177/f/5/pusheen_the_cat_png_22_by_13taylorswiftlover13-d6apppf.png';
+      img.style.position = 'absolute';
+      img.onload = function () {
+        cat.setTransform([window.innerWidth/2,window.innerHeight/2], 0);
+        document.body.appendChild(img);
+      };
+      
+      cat.setTransform = function(position, rotation) {
+
+        img.style.left = position[0] - img.width  / 2 + 'px';
+        img.style.top  = position[1] - img.height / 2 + 'px';
+
+        img.style.transform = 'rotate(' + -rotation + 'rad)';
+      
+        img.style.webkitTransform = img.style.MozTransform = img.style.msTransform =
+        img.style.OTransform = img.style.transform;
+
+      };
+
+    };
+
+    function Doge() {
+      tDoge = new Sprite(scene, "doge.png", 80, 80);
+
+      tDoge.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tDoge.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tDoge.reset();
+
+      return tDoge;
+    }
+
+    function makeDoges() {
+      doges = new Array(num_doges);
+      for (i = 0; i < num_doges; i++) {
+        doges[i] = new Doge();
+      }
+    }
+
+    function updateDoges() {
+      for (i = 0; i < num_doges; i++) {
+        doges[i].update();
+      }
+    }
+
+    function BigDoge() {
+      tBigDoge = new Sprite(scene, "doge.png", 120, 120);
+
+      tBigDoge.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tBigDoge.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tBigDoge.reset();
+
+      return tBigDoge;
+    }
+
+    function makeBigDoges() {
+      bigDoges = new Array(num_big_doges);
+      for (i = 0; i < num_big_doges; i++) {
+        bigDoges[i] = new BigDoge();
+      }
+    }
+
+    function updateBigDoges() {
+      for (i = 0; i < num_big_doges; i++) {
+        bigDoges[i].update();
+      }
+    }
+
+    function Yarn() {
+      tYarn = new Sprite(scene, "yarn.png", 50, 50);
+
+      tYarn.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tYarn.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tYarn.reset();
+
+      return tYarn;
+    }
+
+    function makeYarns() {
+      yarns = new Array(num_yarns);
+      for (i = 0; i < num_yarns; i++) {
+        yarns[i] = new Yarn();
+      }
+    }
+
+    function updateYarns() {
+      for (i = 0; i < num_yarns; i++) {
+        yarns[i].update();
+      }
+    }
+
+    function GreenYarn() {
+      tGreenYarn = new Sprite(scene, "yarn2.png", 80, 80);
+
+      tGreenYarn.reset = function() {
+        this.setDY((Math.random() * 10) - 5);
+        this.setDX((Math.random() * 10) + 5);
+        newY = Math.random() * scene.height;
+        this.setPosition(50, newY);
+      };
+
+      tGreenYarn.checkBounds = function() {
+        if (this.x > scene.width) {
+          this.reset();
+        }
+      };
+
+      tGreenYarn.reset();
+
+      return tGreenYarn;
+    }
+
+    function makeGreenYarns() {
+      green_yarns = new Array(num_green_yarns);
+      for (i = 0; i < num_green_yarns; i++) {
+        green_yarns[i] = new GreenYarn();
+      }
+    }
+
+    function updateGreenYarns() {
+      for (i = 0; i < num_green_yarns; i++) {
+        green_yarns[i].update();
+      }
+    }
+
+    function Floor() {
+      tFloor = new Sprite(scene, "floor.jpg", 2200, 700);
+      tFloor.setDX(-10);
+      tFloor.setDY(0);
+      tFloor.setPosition(1100, 350);
+
+      tFloor.checkBounds = function() {
+        // repeat floor background for side scroller
+        if (this.x < 0) {
+          this.setPosition(1100, 350);
+        }
+      };
+
+      return tFloor;
+    }
+
+    function checkCollisions() {
+      for (i = 0; i < num_yarns; i++) {
+        if (pusheen.collidesWith(yarns[i])) {
+          yarns[i].reset();
+          console.log('hi');
+        }
+      }
+      for (j = 0; j < num_green_yarns; j++) {
+        if (pusheen.collidesWith(green_yarns[j])) {
+          green_yarns[j].reset();
+        }
+      }
+      for (k = 0; k < num_doges; k++) {
+        if (pusheen.collidesWith(doges[k])) {
+          doges[k].reset();
+        }
+      }
+    }
+
+    function init() {
+      scene = new Scene();
+      scene.setSize(1100, 700);
+      //output = document.getElementById("output");
+      //score = document.getElementById("score");
+      //lives = document.getElementById("lives");
+      //lives.innerHTML = "LIVES: " + startingLives;
+      //timer = new Timer();
+      //timer.reset();
+      makeYarns();
+      makeGreenYarns();
+      makeDoges();
+      makeBigDoges();
+      floor = new Floor();
+      scene.start();
+      Leap.loop(function(frame) {
+
+        frame.hands.forEach(function(hand, index) {
+          
+          var cat = ( cats[index] || (cats[index] = new Cat()) );    
+          cat.setTransform(hand.screenPosition(), hand.roll());
+          
+        });
+        
+      }).use('screenPosition', {scale: 0.25});
+      cats[0] = new Cat();
+      pusheen = cats[0];
+      Leap.loopController.setBackground(true);
+    }
+
+    function update() {
+      scene.clear();
+      //currentTime = timer.getElapsedTime();
+      //output.innerHTML = "TIME: " + currentTime;
+      //points = Math.floor(currentTime);
+      //score.innerHTML = "SCORE: " + points;
+      floor.update();
+      updateYarns();
+      updateGreenYarns();
+      updateDoges();
+      updateBigDoges();
+      checkCollisions();
+    }
+
+    // This allows us to move the cat even whilst in an iFrame.
+    //Leap.loopController.setBackground(true);
+    </script>
+  </head>
+  <body onload = "init()">
+    <!--<div id="score"></div>
+    <div id="lives"></div>-->
+    <h1>Leap Pusheen</h1>
+    <p>Feel free to enjoy and play around with the preview below, or if you're oh so excited to guide cute little Pusheen on his adventurous leap, click the Enter Game button below!</p>
+    <a href="index.html"><button>Enter Game</button></a>
+  </body>
+</html>
